@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    background-color: #000;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+img:last-child {
+    margin-left: 0;
+}
+
+/* 모바일 반응형 (375-414px) */
+@media (max-width: 414px) {
+    body {
+        padding: 0;
+    }
+}
+
+/* 신청 버튼 스타일 */
+.apply-button-container {
+    text-align: center;
+    padding: 20px 0;
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+}
+
+.apply-button-container.top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.apply-button-container.bottom {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 1080px;
+    z-index: 100;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+.apply-button {
+    background: white;
+    color: black;
+    border: none;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: 900;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-transform: none;
+    letter-spacing: 1px;
+    animation: pulse 2s infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.apply-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: #f0f0f0;
+}
+
+.apply-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.button-title {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.button-subtitle {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* 모바일 버튼 조정 */
+@media (max-width: 414px) {
+    .apply-button {
+        padding: 12px 30px;
+        font-size: 16px;
+        gap: 3px;
+    }
+    
+    .button-title {
+        font-size: 18px;
+    }
+    
+    .button-subtitle {
+        font-size: 14px;
+    }
+    
+    .apply-button-container {
+        padding: 15px 0;
+    }
+}
+
+/* 펄스 애니메이션 */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transform: scale(1.02);
+    }
+    100% {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* 데스크탑 반응형 (1081px 이상) - 중앙정렬 + 여백 */
+@media (min-width: 1081px) {
+    body {
+        margin: 0 auto;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+}

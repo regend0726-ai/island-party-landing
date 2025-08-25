@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I-sland Party 신청서</title>
+    <link rel="stylesheet" href="survey.css">
+</head>
+<body>
+    <div class="survey-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="step-counter">
+            <span id="currentStep">1</span> / 6
+        </div>
+
+        <!-- 단계 1: 성함 -->
+        <div class="survey-step active" id="step1">
+            <h2>성함을 입력해주세요</h2>
+            <div class="input-container">
+                <input type="text" id="userName" placeholder="홍길동">
+                <button class="next-btn" id="nameNext">다음</button>
+            </div>
+        </div>
+
+        <!-- 단계 2: 성별 -->
+        <div class="survey-step" id="step2">
+            <h2>성별을 선택해주세요</h2>
+            <div class="options-container">
+                <button class="option-btn" data-value="남성">남성</button>
+                <button class="option-btn" data-value="여성">여성</button>
+            </div>
+        </div>
+
+        <!-- 단계 3: 년생 -->
+        <div class="survey-step" id="step3">
+            <h2>태어난 년도를 입력해주세요</h2>
+            <div class="input-container">
+                <input type="number" id="birthYear" placeholder="예: 1995" min="1980" max="2010">
+                <div class="button-container">
+                    <button class="back-btn" id="yearBack">이전</button>
+                    <button class="next-btn" id="yearNext">다음</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 단계 4: 얼굴사진 -->
+        <div class="survey-step" id="step4">
+            <h2>얼굴사진을 업로드해주세요</h2>
+            <div class="upload-container">
+                <input type="file" id="facePhoto" accept="image/*" style="display: none;">
+                <button class="upload-btn" id="uploadBtn">사진 선택</button>
+                <div class="upload-preview" id="uploadPreview"></div>
+                <div class="button-container" id="photoButtons" style="display: none;">
+                    <button class="back-btn" id="photoBack">이전</button>
+                    <button class="next-btn" id="photoNext">다음</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 단계 5: 연락처 -->
+        <div class="survey-step" id="step5">
+            <h2>연락처를 입력해주세요</h2>
+            <div class="input-container">
+                <input type="tel" id="phoneNumber" placeholder="010-1234-5678">
+                <div class="button-container">
+                    <button class="back-btn" id="phoneBack">이전</button>
+                    <button class="next-btn" id="phoneNext">다음</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 단계 6: 인스타 아이디 -->
+        <div class="survey-step" id="step6">
+            <h2>인스타그램 아이디를 입력해주세요</h2>
+            <div class="input-container">
+                <span class="instagram-prefix">@</span>
+                <input type="text" id="instagram" placeholder="instagram_id">
+                <div class="button-container">
+                    <button class="back-btn" id="instaBack">이전</button>
+                    <button class="next-btn" id="instaNext">완료</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 완료 단계 -->
+        <div class="survey-step" id="stepComplete">
+            <div class="completion-message">
+                <h2>✅ 신청 완료!</h2>
+                <p>신청해주셔서 감사합니다.<br>
+                제출해주신 정보 하루안에 검토 후 연락드리겠습니다.<br>
+                참가 시 3일전에 오픈 채팅방에 초대됩니다.<br>
+                <strong>I-sland Party 💕</strong></p>
+            </div>
+            <button class="home-btn" onclick="window.location.href='index.html'">홈으로 돌아가기</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
+
+        // Firebase 설정 - 실제 값으로 교체하세요
+        const firebaseConfig = {
+            // 3단계에서 복사한 실제 값들을 여기에 붙여넣으세요
+            apiKey: "your-api-key",
+            authDomain: "your-project.firebaseapp.com", 
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "your-app-id"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // 전역 변수로 설정하여 survey.js에서 사용 가능하도록
+        window.firebaseDB = db;
+        window.firebaseStorage = storage;
+        window.firebaseAddDoc = addDoc;
+        window.firebaseCollection = collection;
+        window.firebaseServerTimestamp = serverTimestamp;
+        window.firebaseRef = ref;
+        window.firebaseUploadBytes = uploadBytes;
+        window.firebaseGetDownloadURL = getDownloadURL;
+    </script>
+    <script src="survey.js"></script>
+</body>
+</html>

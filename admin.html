@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I-sland Party 관리자 패널</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn.danger {
+            background: #e74c3c;
+        }
+
+        .btn.danger:hover {
+            background: #c0392b;
+        }
+
+        .responses-container {
+            padding: 30px;
+        }
+
+        .response-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .response-id {
+            font-size: 0.8rem;
+            color: #999;
+            font-family: monospace;
+        }
+
+        .response-date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .response-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .data-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .data-label {
+            font-size: 0.8rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .data-value {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .photo-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .error {
+            background: #ffe6e6;
+            color: #d63031;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .response-data {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <h1>🏝️ I-sland Party 관리자</h1>
+            <p>설문 응답 관리 시스템</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="totalResponses">-</div>
+                <div class="stat-label">총 응답 수</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="maleCount">-</div>
+                <div class="stat-label">남성 응답자</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="femaleCount">-</div>
+                <div class="stat-label">여성 응답자</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgAge">-</div>
+                <div class="stat-label">평균 나이</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="loadResponses()">🔄 새로고침</button>
+            <button class="btn" onclick="exportToCSV()">📊 CSV 다운로드</button>
+            <button class="btn danger" onclick="clearAllData()">🗑️ 모든 데이터 삭제</button>
+        </div>
+
+        <div class="responses-container">
+            <div id="loadingState" class="loading">
+                <p>📡 Firebase 설정이 필요합니다.</p>
+                <p>survey.html의 Firebase 설정을 완료해주세요.</p>
+            </div>
+            <div id="responsesContent"></div>
+        </div>
+    </div>
+
+    <!-- 이미지 모달 -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <img id="modalImage" src="" alt="사진">
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getFirestore, collection, getDocs, deleteDoc, doc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+        // Firebase 설정 - survey.html과 동일한 값 사용
+        const firebaseConfig = {
+            // survey.html과 동일한 실제 값들을 여기에 붙여넣으세요
+            apiKey: "your-api-key",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id", 
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "your-app-id"
+        };
+
+        let db;
+        let responses = [];
+
+        // Firebase 초기화
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            
+            // 전역 함수로 설정
+            window.loadResponses = loadResponses;
+            window.exportToCSV = exportToCSV;
+            window.clearAllData = clearAllData;
+            
+            // 페이지 로드 시 데이터 불러오기
+            loadResponses();
+        } catch (error) {
+            console.error('Firebase 초기화 오류:', error);
+            document.getElementById('loadingState').innerHTML = `
+                <p>❌ Firebase 설정 오류</p>
+                <p>설정을 확인해주세요: ${error.message}</p>
+            `;
+        }
+
+        async function loadResponses() {
+            try {
+                document.getElementById('loadingState').style.display = 'block';
+                document.getElementById('loadingState').innerHTML = '<p>📡 데이터를 불러오는 중...</p>';
+                
+                const q = query(collection(db, "surveys"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                responses = [];
+                querySnapshot.forEach((doc) => {
+                    responses.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                displayResponses();
+                updateStats();
+                document.getElementById('loadingState').style.display = 'none';
+                
+            } catch (error) {
+                console.error('데이터 로드 오류:', error);
+                document.getElementById('loadingState').innerHTML = `
+                    <p>❌ 데이터 로드 실패</p>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+
+        function displayResponses() {
+            const container = document.getElementById('responsesContent');
+            
+            if (responses.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>📭 아직 응답이 없습니다</h3>
+                        <p>설문 응답이 들어오면 여기에 표시됩니다.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = responses.map(response => `
+                <div class="response-card">
+                    <div class="response-header">
+                        <span class="response-id">ID: ${response.id}</span>
+                        <span class="response-date">${formatDate(response.createdAt || response.timestamp?.toDate?.())}</span>
+                    </div>
+                    <div class="response-data">
+                        <div class="data-item">
+                            <span class="data-label">성함</span>
+                            <span class="data-value">${response.name || '정보 없음'}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">성별</span>
+                            <span class="data-value">${response.gender}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">출생년도</span>
+                            <span class="data-value">${response.birthYear}년 (${new Date().getFullYear() - response.birthYear}세)</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">연락처</span>
+                            <span class="data-value">${response.phoneNumber || '정보 없음'}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">인스타그램</span>
+                            <span class="data-value">@${response.instagram}</span>
+                        </div>
+                        ${response.photoURL ? `
+                        <div class="data-item">
+                            <span class="data-label">사진</span>
+                            <img src="${response.photoURL}" alt="프로필 사진" class="photo-thumbnail" onclick="openModal('${response.photoURL}')">
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            const total = responses.length;
+            const maleCount = responses.filter(r => r.gender === '남성').length;
+            const femaleCount = responses.filter(r => r.gender === '여성').length;
+            const avgAge = total > 0 ? Math.round(responses.reduce((sum, r) => sum + (new Date().getFullYear() - r.birthYear), 0) / total) : 0;
+
+            document.getElementById('totalResponses').textContent = total;
+            document.getElementById('maleCount').textContent = maleCount;
+            document.getElementById('femaleCount').textContent = femaleCount;
+            document.getElementById('avgAge').textContent = avgAge + '세';
+        }
+
+        function exportToCSV() {
+            if (responses.length === 0) {
+                alert('내보낼 데이터가 없습니다.');
+                return;
+            }
+
+            const headers = ['ID', '성함', '성별', '출생년도', '나이', '연락처', '인스타그램', '사진URL', '제출일시'];
+            const csvContent = [
+                headers.join(','),
+                ...responses.map(r => [
+                    r.id,
+                    r.name || '정보없음',
+                    r.gender,
+                    r.birthYear,
+                    new Date().getFullYear() - r.birthYear,
+                    r.phoneNumber || '',
+                    r.instagram,
+                    r.photoURL || '',
+                    formatDate(r.createdAt || r.timestamp?.toDate?.())
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `island-party-responses-${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        async function clearAllData() {
+            if (!confirm('정말로 모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                return;
+            }
+
+            if (!confirm('한 번 더 확인합니다. 모든 설문 응답을 삭제하시겠습니까?')) {
+                return;
+            }
+
+            try {
+                for (const response of responses) {
+                    await deleteDoc(doc(db, "surveys", response.id));
+                }
+                
+                alert('모든 데이터가 삭제되었습니다.');
+                loadResponses();
+            } catch (error) {
+                console.error('삭제 오류:', error);
+                alert('데이터 삭제 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        function formatDate(date) {
+            if (!date) return '날짜 없음';
+            
+            if (typeof date === 'string') {
+                date = new Date(date);
+            }
+            
+            return date.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // 전역 함수로 설정
+        window.openModal = function(imageUrl) {
+            document.getElementById('modalImage').src = imageUrl;
+            document.getElementById('imageModal').style.display = 'flex';
+        };
+
+        window.closeModal = function() {
+            document.getElementById('imageModal').style.display = 'none';
+        };
+    </script>
+</body>
+</html>
