@@ -30,7 +30,6 @@ img:last-child {
     }
 }
 
-<<<<<<< HEAD
 /* 신청 버튼 스타일 */
 .apply-button-container {
     text-align: center;
@@ -135,9 +134,6 @@ img:last-child {
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 }
-
-=======
->>>>>>> 58448faabf35e19ea1df673a2ba190b89e87611e
 /* 데스크탑 반응형 (1081px 이상) - 중앙정렬 + 여백 */
 @media (min-width: 1081px) {
     body {
