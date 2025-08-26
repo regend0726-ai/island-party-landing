@@ -1,12 +1,13 @@
 let currentStep = 1;
-const totalSteps = 6;
+const totalSteps = 7;
 let surveyData = {
     name: '',
     gender: '',
     birthYear: '',
     photo: null,
     phoneNumber: '',
-    instagram: ''
+    instagram: '',
+    mbti: ''
 };
 
 // DOM 요소들
@@ -78,6 +79,34 @@ function setupEventListeners() {
     });
 
     document.getElementById('phoneBack').addEventListener('click', function() {
+        previousStep();
+    });
+
+    // MBTI 선택
+    const mbtiButtons = document.querySelectorAll('#step6 .mbti-btn');
+    mbtiButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 다른 버튼들의 선택 상태 제거
+            mbtiButtons.forEach(btn => btn.classList.remove('selected'));
+            // 현재 버튼 선택 상태 추가
+            this.classList.add('selected');
+            
+            surveyData.mbti = this.dataset.value;
+            
+            // 다음 버튼 표시
+            document.getElementById('mbtiButtons').style.display = 'block';
+        });
+    });
+
+    document.getElementById('mbtiNext').addEventListener('click', function() {
+        if (surveyData.mbti) {
+            nextStep();
+        } else {
+            alert('MBTI를 선택해주세요.');
+        }
+    });
+
+    document.getElementById('mbtiBack').addEventListener('click', function() {
         previousStep();
     });
 
@@ -285,6 +314,7 @@ async function completeSurvey() {
                 birthYear: surveyData.birthYear,
                 phoneNumber: surveyData.phoneNumber,
                 instagram: surveyData.instagram,
+                mbti: surveyData.mbti,
                 photoURL: photoURL,
                 submittedAt: window.firebaseServerTimestamp(),
                 createdAt: new Date().toISOString()
@@ -297,6 +327,7 @@ async function completeSurvey() {
                 birthYear: surveyData.birthYear,
                 phoneNumber: surveyData.phoneNumber,
                 instagram: surveyData.instagram,
+                mbti: surveyData.mbti,
                 photoDataURL: surveyData.photo ? await fileToDataURL(surveyData.photo) : null,
                 submittedAt: new Date().toISOString()
             };
