@@ -251,6 +251,15 @@ function updateProgress() {
     currentStepSpan.textContent = currentStep;
 }
 
+// 파일을 DataURL로 변환하는 헬퍼 함수
+async function fileToDataURL(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+    });
+}
+
 async function completeSurvey() {
     try {
         // 로딩 표시
@@ -260,22 +269,24 @@ async function completeSurvey() {
         let photoURL = null;
 
         // 사진이 있는 경우 Firebase Storage에 업로드
-        if (surveyData.photo && typeof ref !== 'undefined') {
-            const photoRef = ref(storage, `photos/${Date.now()}_${surveyData.photo.name}`);
-            const snapshot = await uploadBytes(photoRef, surveyData.photo);
-            photoURL = await getDownloadURL(snapshot.ref);
+        if (surveyData.photo && typeof window.firebaseRef !== 'undefined') {
+            const photoRef = window.firebaseRef(window.firebaseStorage, `photos/${Date.now()}_${surveyData.photo.name}`);
+            const snapshot = await window.firebaseUploadBytes(photoRef, surveyData.photo);
+            photoURL = await window.firebaseGetDownloadURL(snapshot.ref);
         }
 
+        let docRef = null;
+        
         // Firestore에 데이터 저장
-        if (typeof addDoc !== 'undefined') {
-            const docRef = await addDoc(collection(db, 'survey-responses'), {
+        if (typeof window.firebaseAddDoc !== 'undefined') {
+            docRef = await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, 'survey-responses'), {
                 name: surveyData.name,
                 gender: surveyData.gender,
                 birthYear: surveyData.birthYear,
                 phoneNumber: surveyData.phoneNumber,
                 instagram: surveyData.instagram,
                 photoURL: photoURL,
-                submittedAt: serverTimestamp(),
+                submittedAt: window.firebaseServerTimestamp(),
                 createdAt: new Date().toISOString()
             });
 
@@ -290,9 +301,9 @@ async function completeSurvey() {
                 submittedAt: new Date().toISOString()
             };
             localStorage.setItem('surveyData', JSON.stringify(backupData));
+            
+            console.log('설문 데이터가 Firebase에 저장되었습니다. ID:', docRef.id);
         }
-
-        console.log('설문 데이터가 Firebase에 저장되었습니다. ID:', docRef.id);
         
         // 마지막 단계 숨기기
         document.getElementById(`step${currentStep}`).classList.remove('active');
@@ -307,7 +318,7 @@ async function completeSurvey() {
         // 로컬 스토리지에도 백업 저장
         localStorage.setItem('surveyData', JSON.stringify({
             ...surveyData,
-            firebaseId: docRef.id,
+            firebaseId: docRef ? docRef.id : null,
             savedAt: new Date().toISOString()
         }));
         
