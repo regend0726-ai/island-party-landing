@@ -302,7 +302,7 @@
                 document.getElementById('loadingState').style.display = 'block';
                 document.getElementById('loadingState').innerHTML = '<p>📡 데이터를 불러오는 중...</p>';
                 
-                const q = query(collection(db, "surveys"), orderBy("timestamp", "desc"));
+                const q = query(collection(db, "survey-responses"), orderBy("submittedAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
                 responses = [];
@@ -343,7 +343,7 @@
                 <div class="response-card">
                     <div class="response-header">
                         <span class="response-id">ID: ${response.id}</span>
-                        <span class="response-date">${formatDate(response.createdAt || response.timestamp?.toDate?.())}</span>
+                        <span class="response-date">${formatDate(response.createdAt || response.submittedAt?.toDate?.())}</span>
                     </div>
                     <div class="response-data">
                         <div class="data-item">
@@ -407,7 +407,7 @@
                     r.phoneNumber || '',
                     r.instagram,
                     r.photoURL || '',
-                    formatDate(r.createdAt || r.timestamp?.toDate?.())
+                    formatDate(r.createdAt || r.submittedAt?.toDate?.())
                 ].join(','))
             ].join('\n');
 
@@ -429,7 +429,7 @@
 
             try {
                 for (const response of responses) {
-                    await deleteDoc(doc(db, "surveys", response.id));
+                    await deleteDoc(doc(db, "survey-responses", response.id));
                 }
                 
                 alert('모든 데이터가 삭제되었습니다.');
