@@ -13,7 +13,7 @@
         </div>
         
         <div class="step-counter">
-            <span id="currentStep">1</span> / 6
+            <span id="currentStep">1</span> / 7
         </div>
 
         <!-- 단계 1: 성함 -->
@@ -72,8 +72,59 @@
             </div>
         </div>
 
-        <!-- 단계 6: 인스타 아이디 -->
+        <!-- 단계 6: MBTI -->
         <div class="survey-step" id="step6">
+            <h2>MBTI를 선택해주세요</h2>
+            <div class="mbti-container">
+                <div class="mbti-group">
+                    <h3>분석가형 (NT)</h3>
+                    <div class="mbti-options">
+                        <button class="mbti-btn" data-value="INTJ">INTJ - 건축가</button>
+                        <button class="mbti-btn" data-value="INTP">INTP - 논리술사</button>
+                        <button class="mbti-btn" data-value="ENTJ">ENTJ - 통솔자</button>
+                        <button class="mbti-btn" data-value="ENTP">ENTP - 변론가</button>
+                    </div>
+                </div>
+                
+                <div class="mbti-group">
+                    <h3>외교관형 (NF)</h3>
+                    <div class="mbti-options">
+                        <button class="mbti-btn" data-value="INFJ">INFJ - 옹호자</button>
+                        <button class="mbti-btn" data-value="INFP">INFP - 중재자</button>
+                        <button class="mbti-btn" data-value="ENFJ">ENFJ - 선도자</button>
+                        <button class="mbti-btn" data-value="ENFP">ENFP - 활동가</button>
+                    </div>
+                </div>
+                
+                <div class="mbti-group">
+                    <h3>관리자형 (SJ)</h3>
+                    <div class="mbti-options">
+                        <button class="mbti-btn" data-value="ISTJ">ISTJ - 현실주의자</button>
+                        <button class="mbti-btn" data-value="ISFJ">ISFJ - 수호자</button>
+                        <button class="mbti-btn" data-value="ESTJ">ESTJ - 경영자</button>
+                        <button class="mbti-btn" data-value="ESFJ">ESFJ - 집정관</button>
+                    </div>
+                </div>
+                
+                <div class="mbti-group">
+                    <h3>탐험가형 (SP)</h3>
+                    <div class="mbti-options">
+                        <button class="mbti-btn" data-value="ISTP">ISTP - 만능재주꾼</button>
+                        <button class="mbti-btn" data-value="ISFP">ISFP - 모험가</button>
+                        <button class="mbti-btn" data-value="ESTP">ESTP - 사업가</button>
+                        <button class="mbti-btn" data-value="ESFP">ESFP - 연예인</button>
+                    </div>
+                </div>
+                
+                <div class="button-container" id="mbtiButtons" style="display: none;">
+                    <button class="back-btn" id="mbtiBack">이전</button>
+                    <button class="next-btn" id="mbtiNext">다음</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 단계 7: 인스타 아이디 -->
+        <div class="survey-step" id="step7">
             <h2>인스타그램 아이디를 입력해주세요</h2>
             <div class="input-container">
                 <span class="instagram-prefix">@</span>
