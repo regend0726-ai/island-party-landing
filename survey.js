@@ -1,10 +1,9 @@
 let currentStep = 1;
-const totalSteps = 7;
+const totalSteps = 6;
 let surveyData = {
     name: '',
     gender: '',
     birthYear: '',
-    photo: null,
     phoneNumber: '',
     instagram: '',
     mbti: ''
@@ -52,23 +51,6 @@ function setupEventListeners() {
         previousStep();
     });
 
-    // 사진 업로드
-    document.getElementById('uploadBtn').addEventListener('click', function() {
-        document.getElementById('facePhoto').click();
-    });
-
-    document.getElementById('facePhoto').addEventListener('change', function(e) {
-        handlePhotoUpload(e);
-    });
-
-    document.getElementById('photoNext').addEventListener('click', function() {
-        nextStep();
-    });
-
-    document.getElementById('photoBack').addEventListener('click', function() {
-        previousStep();
-    });
-
     // 연락처 입력
     document.getElementById('phoneNext').addEventListener('click', function() {
         const phoneNumber = document.getElementById('phoneNumber').value;
@@ -83,7 +65,7 @@ function setupEventListeners() {
     });
 
     // MBTI 선택
-    const mbtiButtons = document.querySelectorAll('#step6 .mbti-btn');
+    const mbtiButtons = document.querySelectorAll('#step5 .mbti-btn');
     mbtiButtons.forEach(button => {
         button.addEventListener('click', function() {
             // 다른 버튼들의 선택 상태 제거
@@ -175,37 +157,6 @@ function validateBirthYear(year) {
     return true;
 }
 
-function handlePhotoUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // 파일 타입 검증
-    if (!file.type.startsWith('image/')) {
-        alert('이미지 파일만 업로드 가능합니다.');
-        return;
-    }
-
-    // 파일 크기 검증 (5MB 제한)
-    if (file.size > 5 * 1024 * 1024) {
-        alert('파일 크기는 5MB 이하여야 합니다.');
-        return;
-    }
-
-    // 미리보기 생성
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const preview = document.getElementById('uploadPreview');
-        preview.innerHTML = `<img src="${e.target.result}" alt="업로드된 사진">`;
-        preview.style.display = 'block';
-
-        // 다음 버튼 표시
-        document.getElementById('photoButtons').style.display = 'block';
-
-        // 데이터 저장
-        surveyData.photo = file;
-    };
-    reader.readAsDataURL(file);
-}
 
 function validatePhoneNumber(phoneNumber) {
     if (!phoneNumber) {
@@ -267,11 +218,6 @@ function previousStep() {
 
     // 진행률 업데이트
     updateProgress();
-
-    // 사진 업로드 단계에서 뒤로 갈 때 버튼 상태 복원
-    if (currentStep === 4 && surveyData.photo) {
-        document.getElementById('photoButtons').style.display = 'block';
-    }
 }
 
 function updateProgress() {
@@ -295,14 +241,6 @@ async function completeSurvey() {
         document.getElementById('instaNext').textContent = '저장 중...';
         document.getElementById('instaNext').disabled = true;
 
-        let photoURL = null;
-
-        // 사진이 있는 경우 Firebase Storage에 업로드
-        if (surveyData.photo && typeof window.firebaseRef !== 'undefined') {
-            const photoRef = window.firebaseRef(window.firebaseStorage, `photos/${Date.now()}_${surveyData.photo.name}`);
-            const snapshot = await window.firebaseUploadBytes(photoRef, surveyData.photo);
-            photoURL = await window.firebaseGetDownloadURL(snapshot.ref);
-        }
 
         let docRef = null;
         
@@ -315,7 +253,6 @@ async function completeSurvey() {
                 phoneNumber: surveyData.phoneNumber,
                 instagram: surveyData.instagram,
                 mbti: surveyData.mbti,
-                photoURL: photoURL,
                 submittedAt: window.firebaseServerTimestamp(),
                 createdAt: new Date().toISOString()
             });
@@ -328,7 +265,6 @@ async function completeSurvey() {
                 phoneNumber: surveyData.phoneNumber,
                 instagram: surveyData.instagram,
                 mbti: surveyData.mbti,
-                photoDataURL: surveyData.photo ? await fileToDataURL(surveyData.photo) : null,
                 submittedAt: new Date().toISOString()
             };
             localStorage.setItem('surveyData', JSON.stringify(backupData));
