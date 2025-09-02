@@ -172,12 +172,10 @@ img:last-child {
 
 .male-text {
     color: #2563eb;
-    animation-delay: 0s;
 }
 
 .female-text {
     color: #dc2626;
-    animation-delay: 1.5s;
 }
 
 @keyframes floating {
