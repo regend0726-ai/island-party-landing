@@ -7,14 +7,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="deadline-notice-top">
-        <div class="gender-row">
-            <div class="gender-section left">
-                <span class="gender-text male-text">현재 승인된 남성 인원 (8/10)</span>
-            </div>
-            <div class="gender-section right">
-                <span class="gender-text female-text">현재승인된 여성인원(7/10)</span>
-            </div>
+    <div class="dday-notice-top">
+        <div class="dday-container">
+            <div class="dday-text">🏝️ I-sland Party D-DAY</div>
+            <div class="dday-counter" id="ddayCounter">D-3</div>
+            <div class="dday-date">2025년 9월 6일 (토)</div>
         </div>
     </div>
     
@@ -24,14 +21,11 @@
     <img src="4.png" alt="섹션 4">
     <img src="5.png" alt="섹션 5">
     
-    <div class="deadline-notice-bottom">
-        <div class="gender-row">
-            <div class="gender-section left">
-                <span class="gender-text male-text">현재 승인된 남성 인원 (8/10)</span>
-            </div>
-            <div class="gender-section right">
-                <span class="gender-text female-text">현재승인된 여성인원(7/10)</span>
-            </div>
+    <div class="dday-notice-bottom">
+        <div class="dday-container">
+            <div class="dday-text">🏝️ I-sland Party D-DAY</div>
+            <div class="dday-counter" id="ddayCounterBottom">D-3</div>
+            <div class="dday-date">2025년 9월 6일 (토)</div>
         </div>
     </div>
     
@@ -41,5 +35,28 @@
             <span class="button-subtitle">지금 신청하기</span>
         </button>
     </div>
+    <script>
+        function updateDDay() {
+            const targetDate = new Date('2025-09-06T00:00:00+09:00');
+            const now = new Date();
+            const diffTime = targetDate - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            let ddayText;
+            if (diffDays > 0) {
+                ddayText = `D-${diffDays}`;
+            } else if (diffDays === 0) {
+                ddayText = 'D-DAY';
+            } else {
+                ddayText = `D+${Math.abs(diffDays)}`;
+            }
+            
+            document.getElementById('ddayCounter').textContent = ddayText;
+            document.getElementById('ddayCounterBottom').textContent = ddayText;
+        }
+        
+        updateDDay();
+        setInterval(updateDDay, 1000 * 60 * 60);
+    </script>
 </body>
 </html>
