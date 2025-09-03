@@ -236,6 +236,61 @@ img:last-child {
     }
 }
 
+/* 문의 섹션 스타일 */
+.contact-section {
+    background: #000;
+    padding: 30px 40px;
+    text-align: center;
+    border-top: 1px solid #333;
+}
+
+.contact-link {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s ease;
+}
+
+.contact-link:hover {
+    color: #fff;
+}
+
+.contact-text {
+    color: #ccc;
+}
+
+.instagram-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.contact-brand {
+    color: #fff;
+    font-weight: 700;
+}
+
+/* 모바일 문의 섹션 조정 */
+@media (max-width: 414px) {
+    .contact-section {
+        padding: 25px 30px;
+    }
+    
+    .contact-link {
+        font-size: 16px;
+        gap: 6px;
+    }
+    
+    .instagram-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
 /* 데스크탑 반응형 (1081px 이상) - 중앙정렬 + 여백 */
 @media (min-width: 1081px) {
     body {
